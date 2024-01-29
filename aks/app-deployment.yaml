@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - image: caroldelwing/wcdapp:latest
+        name: app
+        ports:
+          - containerPort: 3000
+        env:
+          - name: DB_HOST
+            value: "db"
+          - name: DB_PORT
+            value: "27017"
+          - name: DB_NAME
+            value: "WCD_project2"

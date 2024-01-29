@@ -1,0 +1,39 @@
+# Connect to our AKS cluster
+az aks get-credentials -g aks-webapp-monitoring -n aks-webapp-monitoring
+
+# Verify we have the correct current context
+# Should say the name of the AKS application
+kubectl config current-context
+
+# Confirm that we have the correct number of nodes running
+kubectl get nodes -o wide
+
+# Get the cluster info
+kubectl cluster-info
+
+# Get namespaces
+kubectl get namespaces
+
+# Get pods for kube-system
+kubectl get pods -n kube-system
+
+# Deploy mongo-service.yaml
+kubectl apply -f mongo-service.yaml
+
+# Deploy mongo-deployment.yaml
+kubectl apply -f mongo-deployment.yaml
+
+# Deploy app-service.yaml
+kubectl apply -f app-service.yaml
+
+# Deploy app -f app-deployment.yaml
+kubectl apply -f app-deployment.yaml
+
+# Get the services
+kubectl get svc
+
+# Get the deployments
+kubectl get deployments
+
+# Get the pods
+kubectl get pods
