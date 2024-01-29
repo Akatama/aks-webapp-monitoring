@@ -1,0 +1,13 @@
+# OpenTofu
+tofu init
+tofu apply --auto-approve
+
+# To delete
+tofu destroy
+
+# Terraform
+terraform init
+terraform apply --auto-approve
+
+# To Destroy
+terraform destroy

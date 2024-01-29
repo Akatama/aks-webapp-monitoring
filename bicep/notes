@@ -1,0 +1,17 @@
+# With Azure CLI
+
+az group create --name "aks-webapp-monitoring" --location "Central US"
+az deployment group create --resource-group aks-webapp-monitoring --template-file ./bicep/main.bicep 
+
+# Azure CLI - If you want to change any of the parameters
+az deployment group create --resource-group aks-webapp-monitoring --template-file ./bicep/main.bicep \
+  --parameters enableAutoScaling=true
+
+# With Azure PowerShell
+New-AzResourceGroup -Name "aks-webapp-monitoring" -Location "Central US"
+
+New-AzResourceGroupDeployment -ResourceGroupName aks-webapp-monitoring -TemplateFile ./bicep/main.bicep 
+
+# Azure PowerShell - If you want to change any of the parameters
+New-AzResourceGroupDeployment -ResourceGroupName aks-webapp-monitoring -TemplateFile ./bicep/main.bicep `
+  -enableAutoScaling $true
