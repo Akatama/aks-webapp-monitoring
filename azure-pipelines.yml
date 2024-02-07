@@ -1,0 +1,63 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+  - job: Deploy_AKS_Cluster_And_Configure
+    timeoutInMinutes: 10
+    steps:
+    - task: AzureCLI@2
+      displayName: Install OpenTofu
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'sudo snap install --classic opentofu'
+    - task: AzureCLI@2
+      displayName: Tofu Init
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'tofu init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/opentofu/'
+    - task: AzureCLI@2
+      displayName: Deploy AKS Cluster
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'tofu apply --auto-approve'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/opentofu/'
+    - task: AzureCLI@2
+      displayName: Install Kubectl
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'sudo apt install kubectl'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az aks get-credentials -g aks-webapp-monitoring -n aks-webapp-monitoring'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'kubect apply -f aks-advanced/namespaces.yaml'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'cccis-jlindsey-sandbox(ff95cccd-cbb7-41a2-b4ba-41917218c03c)'
+        scriptType: 'pscore'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'kubectl apply -f aks-advanced/mongo-app/'
